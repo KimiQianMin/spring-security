@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
@@ -27,7 +28,8 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 
 	private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
-	private AuthenticationFailureHandler authenticationFailureHandler;
+	@Autowired
+	private AuthenticationFailureHandler defaultAuthenticationFailureHandler;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -45,7 +47,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 			try {
 				validate(new ServletWebRequest(request));
 			} catch (ValidateCodeException ex) {
-				authenticationFailureHandler.onAuthenticationFailure(request, response, ex);
+				defaultAuthenticationFailureHandler.onAuthenticationFailure(request, response, ex);
 				return;
 			}
 		}
@@ -87,12 +89,13 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 		this.sessionStrategy = sessionStrategy;
 	}
 
-	public AuthenticationFailureHandler getAuthenticationFailureHandler() {
-		return authenticationFailureHandler;
+	public AuthenticationFailureHandler getDefaultAuthenticationFailureHandler() {
+		return defaultAuthenticationFailureHandler;
 	}
 
-	public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-		this.authenticationFailureHandler = authenticationFailureHandler;
+	public void setDefaultAuthenticationFailureHandler(
+			AuthenticationFailureHandler defaultAuthenticationFailureHandler) {
+		this.defaultAuthenticationFailureHandler = defaultAuthenticationFailureHandler;
 	}
 
 }

@@ -20,7 +20,7 @@ import com.tech.security.core.properties.SecurityProperties;
 import com.tech.security.core.support.SimpleResponse;
 
 @Component
-public class MyAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class DefaultAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

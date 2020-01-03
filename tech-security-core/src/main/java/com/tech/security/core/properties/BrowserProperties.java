@@ -4,7 +4,7 @@ public class BrowserProperties {
 
 	private String loginPage = "/tech-signIn.html";
 
-	private LoginType loginType = LoginType.JSON;
+	private LoginType loginType = LoginType.REDIRECT;
 
 	public String getLoginPage() {
 		return loginPage;

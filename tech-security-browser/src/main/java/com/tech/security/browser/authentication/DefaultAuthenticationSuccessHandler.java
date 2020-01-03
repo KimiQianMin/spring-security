@@ -18,7 +18,7 @@ import com.tech.security.core.properties.LoginType;
 import com.tech.security.core.properties.SecurityProperties;
 
 @Component
-public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
    
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

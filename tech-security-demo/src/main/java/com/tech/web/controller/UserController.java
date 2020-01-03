@@ -38,6 +38,9 @@ import com.tech.security.core.properties.SecurityProperties;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author attpnxg1
@@ -45,6 +48,7 @@ import io.jsonwebtoken.Jwts;
  */
 @RestController
 @RequestMapping("/user")
+@EnableSwagger2
 public class UserController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -87,7 +91,8 @@ public class UserController {
 	// false, defaultValue = "Kimi") String userName) {
 	@GetMapping
 	@JsonView(User.UserSimpleView.class)
-	public List<User> query(UserQueryCondition condition) {
+	@ApiOperation(value="User Query Service")
+	public List<User> query(@ApiParam(value="Condition of User Query") UserQueryCondition condition) {
 
 		System.out.println(ReflectionToStringBuilder.toString(condition, ToStringStyle.MULTI_LINE_STYLE));
 
@@ -119,7 +124,7 @@ public class UserController {
 	public void delete(@PathVariable String id) {
 		// System.out.println(id);
 
-		throw new UserNotExistException("id");
+		//throw new UserNotExistException("id");
 	}
 
 	// @GetMapping("/me")

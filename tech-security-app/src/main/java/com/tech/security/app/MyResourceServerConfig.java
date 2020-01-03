@@ -13,7 +13,7 @@ import com.tech.security.app.authentication.MyAuthenticationSuccessHandler;
 import com.tech.security.core.properties.SecurityProperties;
 
 @Configuration
-//@EnableResourceServer
+@EnableResourceServer
 public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
     
 	private Logger logger = LoggerFactory.getLogger(getClass());

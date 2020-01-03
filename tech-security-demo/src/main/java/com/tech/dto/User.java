@@ -12,6 +12,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.tech.validator.MyConstraint;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * @author attpnxg1
  *
@@ -27,6 +30,7 @@ public class User {
 	private String id;
 
 	@MyConstraint(message = "this is testing for userName validation")
+	@ApiModelProperty(value="Name of User")
 	private String userName;
 
 	@NotBlank(message = "password can't be empty")

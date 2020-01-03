@@ -50,9 +50,9 @@ public class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAd
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
-			.tokenStore(tokenStore)
 			.authenticationManager(authenticationManager)
-			.userDetailsService(userDetailsService);
+			.userDetailsService(userDetailsService)
+			.tokenStore(tokenStore);
 		
 		if(jwtAccessTokenConverter != null && jwtTokenEnhancer != null){
 			

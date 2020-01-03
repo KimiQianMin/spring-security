@@ -7,8 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.social.security.SpringSocialConfigurer;
 
-import com.tech.security.browser.authentication.MyAuthenticationFailureHandler;
-import com.tech.security.browser.authentication.MyAuthenticationSuccessHandler;
+import com.tech.security.browser.authentication.DefaultAuthenticationFailureHandler;
+import com.tech.security.browser.authentication.DefaultAuthenticationSuccessHandler;
 import com.tech.security.core.authorize.AuthorizeConfigManager;
 import com.tech.security.core.properties.SecurityProperties;
 import com.tech.security.core.validate.code.ValidateCodeFilter;
@@ -25,10 +25,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityProperties securityProperties;
     
     @Autowired
-    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    private DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
     
     @Autowired
-    private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+    private DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
     
     @Autowired
     private ValidateCodeFilter validateCodeFilter;
@@ -43,7 +43,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		//ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-		validateCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+		//validateCodeFilter.setAuthenticationFailureHandler(defaultAuthenticationFailureHandler);
 		
 		//http.httpBasic()
 		//http.formLogin()
@@ -51,8 +51,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin()
 			.loginPage("/authentication/require")
 			.loginProcessingUrl("/authentication/form")
-			.successHandler(myAuthenticationSuccessHandler)
-			.failureHandler(myAuthenticationFailureHandler);
+			.successHandler(defaultAuthenticationSuccessHandler)
+			.failureHandler(defaultAuthenticationFailureHandler);
 			
 		http.apply(techSocialSecurityConfig)
 			.and()

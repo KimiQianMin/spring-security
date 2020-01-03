@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.tech.security.app.jwt;
+package com.tech.security.jwt;
 
 import java.util.HashMap;
 import java.util.Map;
