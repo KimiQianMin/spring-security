@@ -32,7 +32,7 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
 	private SecurityProperties securityProperties;
 
 	@Override
-	public ImageCode createImageCode(HttpServletRequest request) throws IOException {
+	public ImageCode generate(HttpServletRequest request) throws IOException {
 
 		int width = ServletRequestUtils.getIntParameter(request, "width",
 				securityProperties.getCode().getImage().getWidth());

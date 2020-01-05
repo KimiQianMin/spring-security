@@ -20,7 +20,7 @@ import com.tech.security.core.validate.code.ValidateCodeGenerator;
 public class DemoImageCodeGenerator implements ValidateCodeGenerator {
 
 	@Override
-	public ImageCode createImageCode(HttpServletRequest request) throws IOException {
+	public ImageCode generate(HttpServletRequest request) throws IOException {
 		System.out.println("demo createImageCode ...");
 		return null;
 	}

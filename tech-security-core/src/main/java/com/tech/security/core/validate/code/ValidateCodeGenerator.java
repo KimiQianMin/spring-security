@@ -6,6 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface ValidateCodeGenerator {
 
-	ImageCode createImageCode(HttpServletRequest request) throws IOException;
+	ValidateCode generate(HttpServletRequest request) throws IOException;
 
 }

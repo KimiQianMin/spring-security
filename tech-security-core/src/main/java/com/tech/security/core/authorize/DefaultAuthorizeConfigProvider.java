@@ -27,7 +27,7 @@ public class DefaultAuthorizeConfigProvider implements AuthorizeConfigProvider {
 		config.antMatchers(
 				"/authentication/require", 
 				securityProperties.getBrowser().getLoginPage(),
-				"/code/image")
+				"/code/*")
 		.permitAll();
 	}
 	
