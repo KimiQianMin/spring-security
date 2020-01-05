@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.tech.security.core.properties.SecurityProperties;
 
 @Component
 public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
@@ -30,6 +33,11 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 
 	@Autowired
 	private AuthenticationFailureHandler defaultAuthenticationFailureHandler;
+	
+	@Autowired
+	private SecurityProperties securityProperties;
+	
+	private AntPathMatcher pathMatcher = new AntPathMatcher();
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -40,10 +48,20 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 		logger.info("request.getRequestURI() - {}", request.getRequestURI());
 		logger.info("request.getMethod() - {}", request.getMethod());
 
-		if (StringUtils.equals("/authentication/form", request.getRequestURI())
-				&& StringUtils.equals(request.getMethod(), "POST")) {
-			logger.info("inside");
+		String url = securityProperties.getCode().getImage().getUrl();
+		logger.info("url - {}", url);
 
+		String[] urls = StringUtils.splitByWholeSeparatorPreserveAllTokens(url, ",");
+
+		boolean action = false;
+		for (String u : urls) {
+			if (pathMatcher.match(u, request.getRequestURI())) {
+				action = true;
+				break;
+			}
+		}
+
+		if (action) {
 			try {
 				validate(new ServletWebRequest(request));
 			} catch (ValidateCodeException ex) {
@@ -51,6 +69,18 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 				return;
 			}
 		}
+
+//		if (StringUtils.equals("/authentication/form", request.getRequestURI())
+//				&& StringUtils.equals(request.getMethod(), "POST")) {
+//			logger.info("inside");
+//
+//			try {
+//				validate(new ServletWebRequest(request));
+//			} catch (ValidateCodeException ex) {
+//				defaultAuthenticationFailureHandler.onAuthenticationFailure(request, response, ex);
+//				return;
+//			}
+//		}
 
 		filterChain.doFilter(request, response);
 	}

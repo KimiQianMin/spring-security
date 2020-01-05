@@ -25,7 +25,7 @@ import com.tech.security.core.properties.SecurityProperties;
 
 @Configuration
 @EnableAuthorizationServer
-public class MyAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+public class DefaultAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

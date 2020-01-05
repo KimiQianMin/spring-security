@@ -8,6 +8,8 @@ public class SecurityProperties {
 	/** imooc.security.browser 路径下的配置会被映射到该配置类中 */
 	private BrowserProperties browser = new BrowserProperties();
 
+	private ValidateCodeProperties code = new ValidateCodeProperties();
+
 	private SocialProperties social = new SocialProperties();
 
 	private OAuth2Properties oauth2 = new OAuth2Properties();
@@ -34,6 +36,14 @@ public class SecurityProperties {
 
 	public void setOauth2(OAuth2Properties oauth2) {
 		this.oauth2 = oauth2;
+	}
+
+	public ValidateCodeProperties getCode() {
+		return code;
+	}
+
+	public void setCode(ValidateCodeProperties code) {
+		this.code = code;
 	}
 
 }

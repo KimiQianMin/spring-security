@@ -8,13 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
-import com.tech.security.app.authentication.MyAuthenticationFailureHandler;
-import com.tech.security.app.authentication.MyAuthenticationSuccessHandler;
+import com.tech.security.app.authentication.DefaultAuthenticationFailureHandler;
+import com.tech.security.app.authentication.DefaultAuthenticationSuccessHandler;
+import com.tech.security.core.authorize.AuthorizeConfigManager;
 import com.tech.security.core.properties.SecurityProperties;
 
 @Configuration
 @EnableResourceServer
-public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
+public class DefaultResourceServerConfig extends ResourceServerConfigurerAdapter {
     
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -22,10 +23,13 @@ public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
     private SecurityProperties securityProperties;
     
     @Autowired
-    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    private DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
     
     @Autowired
-    private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+    private DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
+    
+    @Autowired
+    private AuthorizeConfigManager authorizeConfigManager;
     
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
@@ -35,17 +39,19 @@ public class MyResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.formLogin()
 			.loginPage("/authentication/require")
 			.loginProcessingUrl("/authentication/form")
-			.successHandler(myAuthenticationSuccessHandler)
-			.failureHandler(myAuthenticationFailureHandler)
+			.successHandler(defaultAuthenticationSuccessHandler)
+			.failureHandler(defaultAuthenticationFailureHandler)
 			.and()
-			.authorizeRequests()
-			.antMatchers("/authentication/require", 
-						securityProperties.getBrowser().getLoginPage(),
-						"/code/image").permitAll()
-			.anyRequest()
-			.authenticated()
-			.and()
+//			.authorizeRequests()
+//			.antMatchers("/authentication/require", 
+//						securityProperties.getBrowser().getLoginPage(),
+//						"/code/image").permitAll()
+//			.anyRequest()
+//			.authenticated()
+//			.and()
 			.csrf().disable();
+		
+		authorizeConfigManager.config(http.authorizeRequests());
 	}
 	
 //    private final AuthenticationManager authenticationManager;

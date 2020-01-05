@@ -2,8 +2,10 @@ package com.tech.security.core.properties;
 
 public class BrowserProperties {
 
+	//Default login page
 	private String loginPage = "/tech-signIn.html";
 
+	//Default login type
 	private LoginType loginType = LoginType.REDIRECT;
 
 	public String getLoginPage() {

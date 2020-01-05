@@ -19,11 +19,15 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
+
+import com.tech.security.core.properties.SecurityProperties;
 
 @RestController
 public class ValidateCodeController {
@@ -33,6 +37,9 @@ public class ValidateCodeController {
 	static final String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
 
 	private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+	
+	@Autowired
+	private SecurityProperties securityProperties;
 
 	@GetMapping("/code/image")
 	public void createCode(HttpServletRequest request, HttpServletResponse response)
@@ -46,9 +53,19 @@ public class ValidateCodeController {
 	}
 
 	private ImageCode createImageCode(HttpServletRequest request) throws IOException {
-		String code = RandomStringUtils.randomNumeric(2);
-		BufferedImage image = createImageCode(100, 30, code);
-		return new ImageCode(image, code, 60);
+		
+		int width = ServletRequestUtils.getIntParameter(request, "width",
+				securityProperties.getCode().getImage().getWidth());
+		int height = ServletRequestUtils.getIntParameter(request, "height",
+				securityProperties.getCode().getImage().getHeight());
+		int length = securityProperties.getCode().getImage().getLength();
+		int expireIn = securityProperties.getCode().getImage().getExpireIn();
+
+		logger.info("width - {}, height - {}, length - {}, expireIn - {}", width, height, length, expireIn);
+
+		String code = RandomStringUtils.randomNumeric(length);
+		BufferedImage image = createImageCode(width, height, code);
+		return new ImageCode(image, code, expireIn);
 	}
 
 	/**

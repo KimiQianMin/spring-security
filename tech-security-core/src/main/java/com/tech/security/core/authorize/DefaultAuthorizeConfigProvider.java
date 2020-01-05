@@ -21,7 +21,7 @@ public class DefaultAuthorizeConfigProvider implements AuthorizeConfigProvider {
 	
 	@Autowired
 	private SecurityProperties securityProperties;
-
+ 
 	@Override
 	public void config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config) {
 		config.antMatchers(
