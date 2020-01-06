@@ -9,8 +9,10 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.tech.security.browser.authentication.DefaultAuthenticationFailureHandler;
 import com.tech.security.browser.authentication.DefaultAuthenticationSuccessHandler;
+import com.tech.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.tech.security.core.authorize.AuthorizeConfigManager;
 import com.tech.security.core.properties.SecurityProperties;
+import com.tech.security.core.validate.code.SmsCodeFilter;
 import com.tech.security.core.validate.code.ValidateCodeFilter;
 
 /**
@@ -20,25 +22,31 @@ import com.tech.security.core.validate.code.ValidateCodeFilter;
 
 @Configuration
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
-	
-    @Autowired
-    private SecurityProperties securityProperties;
-    
-    @Autowired
-    private DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
-    
-    @Autowired
-    private DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
-    
-    @Autowired
-    private ValidateCodeFilter validateCodeFilter;
-    
-    @Autowired
-    private SpringSocialConfigurer techSocialSecurityConfig;
-    
-    @Autowired
-    private AuthorizeConfigManager authorizeConfigManager;
-    
+
+	@Autowired
+	private SecurityProperties securityProperties;
+
+	@Autowired
+	private DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
+
+	@Autowired
+	private DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
+
+	@Autowired
+	private ValidateCodeFilter validateCodeFilter;
+
+	@Autowired
+	private SmsCodeFilter smsCodeFilter;
+
+	@Autowired
+	private SpringSocialConfigurer techSocialSecurityConfig;
+
+	@Autowired
+	private AuthorizeConfigManager authorizeConfigManager;
+
+	@Autowired
+	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
@@ -47,7 +55,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		//http.httpBasic()
 		//http.formLogin()
-		http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+		http.addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
 			.formLogin()
 			.loginPage("/authentication/require")
 			.loginProcessingUrl("/authentication/form")
@@ -70,6 +79,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf().disable();
 		
 		authorizeConfigManager.config(http.authorizeRequests());
+		
+		http.apply(smsCodeAuthenticationSecurityConfig);
 		
 	}
 

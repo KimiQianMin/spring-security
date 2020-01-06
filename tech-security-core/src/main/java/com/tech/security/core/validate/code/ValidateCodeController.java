@@ -25,7 +25,8 @@ public class ValidateCodeController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	static final String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
+	static final String SESSION_KEY_IMAGE = "SESSION_KEY_IMAGE_CODE";
+	static final String SESSION_KEY_SMS = "SESSION_KEY_SMS_CODE";
 
 	private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
@@ -47,7 +48,7 @@ public class ValidateCodeController {
 		logger.info("imageCodeGenerator createCode is calling... ");
 
 		ImageCode imageCode = (ImageCode) imageCodeGenerator.generate(request);
-		sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
+		sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY_IMAGE, imageCode);
 		ImageIO.write(imageCode.getImage(), "JPEG", response.getOutputStream());
 	}
 
@@ -58,7 +59,7 @@ public class ValidateCodeController {
 		logger.info("smsCodeGenerator createCode is calling... ");
 
 		ValidateCode validateCode = smsCodeGenerator.generate(request);
-		sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, validateCode);
+		sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY_SMS, validateCode);
 		String mobile = ServletRequestUtils.getRequiredStringParameter(request, "mobile");
 
 		smsCodeSender.send(mobile, validateCode.getCode());

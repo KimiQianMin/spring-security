@@ -25,7 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.tech.security.core.properties.SecurityProperties;
 
 @Component
-public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,7 +48,8 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 		logger.info("request.getRequestURI() - {}", request.getRequestURI());
 		logger.info("request.getMethod() - {}", request.getMethod());
 
-		String url = securityProperties.getCode().getImage().getUrl();
+		// String url = securityProperties.getCode().getImage().getUrl();
+		String url = "/authentication/mobile";
 		logger.info("url - {}", url);
 
 		String[] urls = StringUtils.splitByWholeSeparatorPreserveAllTokens(url, ",");
@@ -87,10 +88,10 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 
 	private void validate(ServletWebRequest request) throws ServletRequestBindingException {
 		// 拿到自己的类型
-		ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request,
-				ValidateCodeController.SESSION_KEY_IMAGE);
+		ValidateCode codeInSession = (ValidateCode) sessionStrategy.getAttribute(request,
+				ValidateCodeController.SESSION_KEY_SMS);
 
-		String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
+		String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "smsCode");
 
 		logger.info("codeInSession - {}", codeInSession);
 		logger.info("codeInRequest - {}", codeInRequest);
@@ -109,7 +110,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 			throw new ValidateCodeException("验证码不匹配");
 		}
 
-		sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_IMAGE);
+		sessionStrategy.removeAttribute(request, ValidateCodeController.SESSION_KEY_SMS);
 	}
 
 	public SessionStrategy getSessionStrategy() {
